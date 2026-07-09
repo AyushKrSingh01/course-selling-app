@@ -5,14 +5,15 @@ const {adminRouter} = require('./routes/admin');
 const mongoose = require("mongoose");
 require('dotenv').config();
 const app = express();
-
+app.use(express.json());
 app.use('/user',userRouter);
 app.use('/course',courseRouter);
 app.use('/admin',adminRouter);
-app.use(express.json());
+;
 
 async function main(){
  await mongoose.connect(process.env.MONGODB_URI);
+ console.log(mongoose.connection.name);
  app.listen(3000);
     console.log("listing on port 3000");
 }
