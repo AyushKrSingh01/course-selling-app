@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const {userModel} = require('../db');
 const userRouter = Router();
 const jwt = require('jsonwebtoken');
-const JWT_USER_PASSWORD="abrakadabra";
+const {JWT_USER_PASSWORD} = require('../config')
 
 userRouter.post('/signup',async (req,res)=>{
     try{
