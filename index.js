@@ -9,7 +9,7 @@ app.use(express.json());
 app.use('/user',userRouter);
 app.use('/course',courseRouter);
 app.use('/admin',adminRouter);
-;
+
 
 async function main(){
  await mongoose.connect(process.env.MONGODB_URI);

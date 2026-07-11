@@ -6,6 +6,7 @@ const zod = require('zod');
 const jwt = require('jsonwebtoken');
 const {JWT_ADMIN_PASSWORD} = require('../config');
 const { adminMiddleware } = require('../middleware/admin');
+const course = require('./course');
 
 adminRouter.post('/signup',async (req,res)=>{
     const {email,password,firstName,lastName} = req.body;
@@ -72,16 +73,34 @@ adminRouter.post('/course',adminMiddleware,async (req,res)=>{
     })
 })
 
-adminRouter.put('/course',(req,res)=>{
+adminRouter.put('/course',adminMiddleware,async (req,res)=>{
+    const adminId = req.adminId;
+    const {title,description,price,imageUrl,courseId} = req.body;
+    const course = await courseModel.updateOne({
+        _id: courseId,
+        creatorId:adminId
+    },{
+        title:title,
+        description:description,
+        imageUrl:imageUrl,
+        price:price
+    })
     res.json({
-        message:"login endpoint"
+        message:"Course updated",
+        courseId:course._id
     })
 })
 
-adminRouter.get('/course/bulk',(req,res)=>{
-    res.json({
-        message:"login endpoint"
-    })
+adminRouter.get('/course/bulk',adminMiddleware,async (req,res)=>{
+    const adminId = req.adminId;
+
+   const course = await courseModel.find({
+    creatorId :adminId
+   });
+   res.json({
+    message:"Cources fetched",
+    course
+   })
 })
 
 module.exports={
