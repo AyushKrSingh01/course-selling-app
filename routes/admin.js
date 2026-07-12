@@ -8,6 +8,8 @@ const {JWT_ADMIN_PASSWORD} = require('../config');
 const { adminMiddleware } = require('../middleware/admin');
 const course = require('./course');
 
+
+
 adminRouter.post('/signup',async (req,res)=>{
     const {email,password,firstName,lastName} = req.body;
     const hashedPassword= await bcrypt.hash(password,5);
@@ -36,18 +38,21 @@ adminRouter.post('/signin',async (req,res)=>{
         const user = await adminModel.findOne({
             email
         })
+      
         if(!user){
-            res.status(403).json({
+            return res.status(403).json({
                 message:"User not found"
             })
         }
+       
         const isMatch = await bcrypt.compare(password,user.password);
+    
         if(!isMatch){
-            res.status(401).json({
+            return res.status(401).json({
                 message:"Invalid Password"
             })
         }
-
+        
         const token = jwt.sign({id:user._id},JWT_ADMIN_PASSWORD);
         res.json({
             token:token,
@@ -69,9 +74,12 @@ adminRouter.post('/course',adminMiddleware,async (req,res)=>{
     })
     res.json({
         message:"course created",
-        courseId:course._id
+        courseId:course._id 
     })
+    console.log(course);
+console.log(courseModel.collection.name);
 })
+
 
 adminRouter.put('/course',adminMiddleware,async (req,res)=>{
     const adminId = req.adminId;
